@@ -97,11 +97,6 @@ root@odroid:~# git config --global user.email "charles.park@hardkernel.com"
 root@odroid:~# git config --global user.name "charles-park"
 ```
 
-* Send data to label printer
-```
-root@odroid: lpr {printer control example file} -P zebra
-```
-
 ### Label Printer setup & test
 * Print device info
 ```
@@ -144,6 +139,11 @@ device for zebra: usb://Zebra%20Technologies/ZTC%20ZD230-203dpi%20ZPL?serial=D4J
 root@odroid: lpadmin -p zebra -E -v socket://192.168.20.36
 root@odroid: lpstat -v
 device for zebra: socket://192.168.20.36
+```
+
+* Send data to label printer
+```
+root@odroid: lpr {printer control example file} -P zebra
 ```
 
 * Label printer test
