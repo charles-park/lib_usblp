@@ -8,8 +8,9 @@ Zebra USB Label Printer Control Library(ZD230D, GC420D)
 
 ### USB Label Pirinter Direct Control. ('lpr' linux command,https://www.computerhope.com/unix/ulpr.htm)
 * GC420d(EPL Code) control example file (ref EPL2_Manual.pdf file)
+* ZD230D(ZPL code) control example file (ref zpl_manual.pdf file)
 ```
-root@odroid: vi gc420d.txt
+; GC420D Form
 ; Example Mac address print
 I8,0,001
 Q78,16
@@ -45,9 +46,8 @@ A4,22,0,2,1,1,N,"abcdefghijklmnopqrs"
 A4,44,0,2,1,1,N,"ABCDEFGHIJKLMNOPQRS"
 P1
 ```
-* ZD230D(ZPL code) control example file (ref zpl_manual.pdf file)
 ```
-root@odroid: vi zd230d.txt
+; ZD230D Form
 ; Example Mac address print
 ^XA
 ^CFC
@@ -70,10 +70,6 @@ root@odroid: vi zd230d.txt
 ^FDABCDEFGHIJKLMNOPQRS^FS
 ^XZ
 ```
-* Send data to label printer
-```
-root@odroid: lpr {printer control example file} -P zebra
-```
 
 ### Install package
 ```
@@ -85,10 +81,13 @@ root@odroid:~# apt update --fix-missing
 root@odroid:~# apt update && apt upgrade -y
 ...
 root@odroid:~# apt install build-essential vim ssh git cups cups-bsd
-
- overlayroot net-tools nmap ethtool samba usbutils
 ...
 
+```
+
+* Send data to label printer
+```
+root@odroid: lpr {printer control example file} -P zebra
 ```
 
 ### Label Printer setup & test
