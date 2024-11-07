@@ -1,0 +1,35 @@
+; Example Mac address print
+I8,0,001
+Q78,16
+q240
+rN
+S4
+D15
+ZB
+JF
+O
+R304,10
+f100
+N
+A10,0,0,2,1,1,N,"forum.odroid.com >"
+A16,32,0,2,1,1,N,"00:1E:06:11:22:33"
+P1
+
+; Example Error message print
+I8,0,001
+Q85,16
+q240
+rN
+S4
+D15
+ZB
+JF
+O
+R304,10
+f100
+N
+A4,0,0,2,1,1,N,"1234567890123456789"
+A4,22,0,2,1,1,N,"abcdefghijklmnopqrs"
+A4,44,0,2,1,1,N,"ABCDEFGHIJKLMNOPQRS"
+P1
+
