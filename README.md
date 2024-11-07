@@ -3,12 +3,12 @@ Zebra USB Label Printer Control Library(ZD230D, GC420D)
 
 ### Network Printer Server(ODROID-C4)
 * Linux OS Image https://dn.odroid.com/S905X3/ODROID-C4/Ubuntu/22.04/ubuntu-22.04-4.9-minimal-odroid-c4-hc4-20220705.img.xz
-* Available printer : Zebra GC420d(Discontinued product), Zebra ZD230D
+* Available printer : Zebra GC420D(Discontinued product), Zebra ZD230D
 * Printer connect : Direct USB Port connection.
 
 ### USB Label Pirinter Direct Control. ('lpr' linux command,https://www.computerhope.com/unix/ulpr.htm)
-* GC420d(EPL Code) control example file (ref EPL2_Manual.pdf file)
-* ZD230D(ZPL code) control example file (ref zpl_manual.pdf file)
+* GC420D(EPL Code) control example file (ref lib_usblp/manual/EPL2_GC420D_Manual.pdf file)
+* ZD230D(ZPL code) control example file (ref lib_usblp/manual/ZPL_ZD230D_Manual.pdf file)
 ```
 ; GC420D Form
 ; Example Mac address print
@@ -138,6 +138,7 @@ device for zebra: socket://192.168.20.36
 ```
 root@odroid:# git clone https://github.com/charles-park/lib_usblp
 root@odroid:# cd lib_usblp
-root@odroid:~/lib_usblp# lpr ./example/example_zd230d.txt -P zebra
+root@odroid:~/lib_usblp# lpr ./example/gc420d_form.txt -P zebra
+root@odroid:~/lib_usblp# lpr ./example/zd230d_form.txt -P zebra
 ```
 
