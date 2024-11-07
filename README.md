@@ -83,6 +83,18 @@ root@odroid:~# apt update && apt upgrade -y
 root@odroid:~# apt install build-essential vim ssh git cups cups-bsd
 ...
 
+root@odroid:~# reboot
+...
+
+root@odroid:~# uname -a
+Linux odroid 4.9.337-17 #1 SMP PREEMPT Mon Sep 2 05:42:54 UTC 2024 aarch64 aarch64 aarch64 GNU/Linux
+
+```
+
+### Github setting
+```
+root@odroid:~# git config --global user.email "charles.park@hardkernel.com"
+root@odroid:~# git config --global user.name "charles-park"
 ```
 
 * Send data to label printer
