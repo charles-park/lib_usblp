@@ -29,15 +29,15 @@
 #include <linux/fb.h>
 #include <getopt.h>
 
-#include "lsb_usblp.h"
+#include "lib_usblp.h"
 
 //------------------------------------------------------------------------------
 // printer library path & filename
 //------------------------------------------------------------------------------
-const char *F_LPR       "/usr/bin/lpr"
-const char *F_LPSTAT    "/usr/bin/lpstat"
-const char *F_LPADMIN   "/usr/sbin/lpadmin"
-const char *F_LPINFO    "/usr/sbin/lpinfo"
+const char *F_LPR      = "/usr/bin/lpr";
+const char *F_LPSTAT   = "/usr/bin/lpstat";
+const char *F_LPADMIN  = "/usr/sbin/lpadmin";
+const char *F_LPINFO   = "/usr/sbin/lpinfo";
 
 //------------------------------------------------------------------------------
 #define TEXT_WIDTH  80
@@ -84,15 +84,15 @@ const char *ZPL_FORM_START = "^XA\n^CFC\n^LH0,0\n";
     "< forum.odroid.com" or "forum.odroid.com >"
     00:1E:06:xx:xx:xx
 */
-const char *ZPL_FORM_MAC_L = "^FO310,25\n^< FDforum.odroid.com^FS\n^FO316,55\n^FD%s^FS\n";
+const char *ZPL_FORM_MAC_L = "^FO310,25\n^FD< forum.odroid.com^FS\n^FO316,55\n^FD%s^FS\n";
 const char *ZPL_FORM_MAC_R = "^FO310,25\n^FDforum.odroid.com >^FS\n^FO316,55\n^FD%s^FS\n";
 
 /* %d = 20, 40, 60, (i * 2) * 10 + 20 */
 const char *ZPL_FORM_ERR   = "^FO304,%d\n^FD%s^FS\n";
 
-const char *ZPL_FORM_ERR_1 = "^FO304,20\n^FD%s^FS\n";
-const char *ZPL_FORM_ERR_2 = "^FO304,40\n^FD%s^FS\n";
-const char *ZPL_FORM_ERR_3 = "^FO304,60\n^FD%s^FS\n";
+const char *ZPL_FORM_ERR_1 = "^FO304,20\n^FD%c%s^FS\n";
+const char *ZPL_FORM_ERR_2 = "^FO304,40\n^FD%c%s^FS\n";
+const char *ZPL_FORM_ERR_3 = "^FO304,60\n^FD%c%s^FS\n";
 
 /* Page end */
 const char *ZPL_FORM_END   = "^XZ\n";
@@ -256,9 +256,70 @@ static int confirm_usblp_device (char *lpname)
 }
 
 //------------------------------------------------------------------------------
-int usblp_print_mac (char *msg);
-int usblp_print_err (char *msg);
+int usblp_print_mac (char *msg, int ch)
+{
+    FILE *fp = fopen ("usblp_mac.txt", "w");
+    const int8_t *form;
+    int8_t cmd_line[1024], *ptr, lines, i;
+
+    if (fp == NULL) {
+        fprintf (stdout, "%s : couuld not create file for usblp test. ", __func__);
+        return 0;
+    }
+
+    fputs  (ZPL_FORM_START, fp);
+    memset (cmd_line, 0, sizeof(cmd_line));
+    if (ch) sprintf(cmd_line, ZPL_FORM_MAC_R, msg);
+    else    sprintf(cmd_line, ZPL_FORM_MAC_L, msg);
+    fputs  (cmd_line, fp);
+    fputs  (ZPL_FORM_END, fp);
+    fclose (fp);
+
+    memset (cmd_line, 0x00, sizeof(cmd_line));
+    sprintf (cmd_line, "%s", "lpr usblp_mac.txt -P zebra 2<&1");
+
+    if ((fp = popen(cmd_line, "w")) != NULL) {
+        pclose(fp);
+    }
+    return 1;
+}
+
+//------------------------------------------------------------------------------
+int usblp_print_err (const char *msg1, const char *msg2, const char *msg3, int ch)
+{
+    FILE *fp = fopen ("usblp_err.txt", "w");
+    const int8_t *form;
+    int8_t cmd_line[1024], *ptr, lines, i;
+
+    if (fp == NULL) {
+        fprintf (stdout, "%s : couuld not create file for usblp test. ", __func__);
+        return 0;
+    }
+
+    fputs  (ZPL_FORM_START, fp);
+    memset (cmd_line, 0, sizeof(cmd_line));
+    sprintf(cmd_line, ZPL_FORM_ERR_1, ch ? '>' : '<', msg1);
+    fputs  (cmd_line, fp);
+    sprintf(cmd_line, ZPL_FORM_ERR_2, ch ? '>' : '<', msg2);
+    fputs  (cmd_line, fp);
+    sprintf(cmd_line, ZPL_FORM_ERR_3, ch ? '>' : '<', msg3);
+    fputs  (cmd_line, fp);
+    fputs  (ZPL_FORM_END, fp);
+    fclose (fp);
+
+    memset (cmd_line, 0x00, sizeof(cmd_line));
+    sprintf (cmd_line, "%s", "lpr usblp_err.txt -P zebra 2<&1");
+
+    if ((fp = popen(cmd_line, "w")) != NULL) {
+        pclose(fp);
+    }
+    return 1;
+}
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 int get_usblp_ptype (void); /* epl, zpl */
+
 //------------------------------------------------------------------------------
 int usblp_config (void)
 {

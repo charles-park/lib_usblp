@@ -25,11 +25,11 @@ OBJS     = $(SRCS:.c=.o)
 all : $(TARGET)
 
 $(TARGET): $(OBJS)
-    $(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+	$(CC) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 %.o: %.c
-    $(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean :
-    rm -f $(OBJS)
-    rm -f $(TARGET)
+	rm -f $(OBJS)
+	rm -f $(TARGET)

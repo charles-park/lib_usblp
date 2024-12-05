@@ -16,6 +16,8 @@
 #define __LIB_USBLP_H__
 
 //------------------------------------------------------------------------------
+extern int  usblp_print_mac  (char *msg, int ch);
+extern int  usblp_config     (void);
 
 #endif  //  #define __USBLP_H__
 //------------------------------------------------------------------------------
