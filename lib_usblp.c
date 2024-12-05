@@ -137,7 +137,7 @@ const int8_t USBLP_ZPL_FORM[][TEXT_WIDTH] = {
 static int check_usblp_connection (void)
 {
     FILE *fp;
-    int8_t cmd_line[1024];
+    char cmd_line[1024];
 
     memset (cmd_line, 0x00, sizeof(cmd_line));
     sprintf (cmd_line, "%s", "lsusb | grep Zebra 2<&1");
@@ -159,10 +159,10 @@ static int check_usblp_connection (void)
 //------------------------------------------------------------------------------
 // get the usb label printer info.
 //------------------------------------------------------------------------------
-static int get_usblp_device (int8_t *lpname)
+static int get_usblp_device (char *lpname)
 {
     FILE *fp;
-    int8_t cmd_line[1024], *ptr;
+    char cmd_line[1024], *ptr;
 
     memset  (cmd_line, 0x00, sizeof(cmd_line));
     sprintf (cmd_line, "%s", "lpinfo -v | grep usb 2<&1");
@@ -206,12 +206,12 @@ static int clr_usblp_device (void)
 static int set_usblp_device (char *lpname)
 {
     FILE *fp;
-    int8_t cmd_line[1024], s_lpname[512];
+    char cmd_line[1024], s_lpname[512];
 
     memset (s_lpname, 0x00, sizeof(s_lpname));
     {
-        int32_t i, pos;
-        for (i = 0, pos = 0; i < strlen(lpname); i++, pos++) {
+        int i, pos;
+        for (i = 0, pos = 0; i < (int)strlen(lpname); i++, pos++) {
             if ((lpname[i] == '(') || (lpname[i] == ')'))
                 s_lpname [pos++] = '\\';
             s_lpname [pos] = lpname[i];
@@ -259,8 +259,7 @@ static int confirm_usblp_device (char *lpname)
 int usblp_print_mac (char *msg, int ch)
 {
     FILE *fp = fopen ("usblp_mac.txt", "w");
-    const int8_t *form;
-    int8_t cmd_line[1024], *ptr, lines, i;
+    char cmd_line[1024];
 
     if (fp == NULL) {
         fprintf (stdout, "%s : couuld not create file for usblp test. ", __func__);
@@ -288,8 +287,7 @@ int usblp_print_mac (char *msg, int ch)
 int usblp_print_err (const char *msg1, const char *msg2, const char *msg3, int ch)
 {
     FILE *fp = fopen ("usblp_err.txt", "w");
-    const int8_t *form;
-    int8_t cmd_line[1024], *ptr, lines, i;
+    char cmd_line[1024];
 
     if (fp == NULL) {
         fprintf (stdout, "%s : couuld not create file for usblp test. ", __func__);
