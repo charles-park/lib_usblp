@@ -50,6 +50,7 @@ const char *EPL_FORM_START = "I8,0,001\nQ78,16\nq240\nrN\nS4\nD15\nZB\nJF\nO\nR3
 const char *EPL_FORM_MAC_L = "A%d,0,0,2,1,1,N,\"< forum.odroid.com\"\nA%d,32,0,2,1,1,N,\"%s\"\n";
 const char *EPL_FORM_MAC_R = "A%d,0,0,2,1,1,N,\"forum.odroid.com >\"\nA%d,32,0,2,1,1,N,\"%s\"\n";
 
+const char *EPL_FORM_MSG   = "A%d,%d,0,2,1,1,N,\"%s\"\n";
 /* %d = 20, 40, 60, (11 * i) * 2 */
 const char *EPL_FORM_ERR   = "A%d,%d,0,2,1,1,N,\"%c%s\"\n";
 
@@ -69,6 +70,7 @@ const char *ZPL_FORM_START = "^XA\n^CFC\n^LH0,0\n";
 const char *ZPL_FORM_MAC_L = "^FO310,25\n^FD< forum.odroid.com^FS\n^FO316,55\n^FD%s^FS\n";
 const char *ZPL_FORM_MAC_R = "^FO310,25\n^FDforum.odroid.com >^FS\n^FO316,55\n^FD%s^FS\n";
 
+const char *ZPL_FORM_MSG   = "^FO3%d,%d\n^FD%s^FS\n";
 /* %d = 20, 40, 60, (i * 2) * 10 + 20 */
 const char *ZPL_FORM_ERR   = "^FO304,%d\n^FD%s^FS\n";
 
@@ -297,6 +299,54 @@ int usblp_print_err (const char *msg1, const char *msg2, const char *msg3, int c
 }
 
 //------------------------------------------------------------------------------
+int usblp_print_test (void)
+{
+    FILE *fp = fopen ("usblp_test.txt", "w");
+    char cmd_line [1024];
+
+    if (fp == NULL) {
+        fprintf (stdout, "%s : couuld not create file for usblp test. ", __func__);
+        return 0;
+    }
+
+#if defined (USE_PROTOCOL_EPL)
+    fputs  (EPL_FORM_START, fp);
+    memset (cmd_line, 0, sizeof(cmd_line));
+    sprintf(cmd_line, EPL_FORM_MSG, NLP_MODEL ? 0:10,  0, "ODROID-NLP SERVER");
+    fputs  (cmd_line, fp);
+
+    memset (cmd_line, 0, sizeof(cmd_line));
+    sprintf(cmd_line, EPL_FORM_MSG, NLP_MODEL ? 0:10, 32,
+                                NLP_MODEL ? "EPL : ZD230D" : "EPL : GC320D");
+    fputs  (cmd_line, fp);
+
+    fputs  (EPL_FORM_END, fp);
+    fclose (fp);
+#else
+    fputs  (ZPL_FORM_START, fp);
+    memset (cmd_line, 0, sizeof(cmd_line));
+    sprintf(cmd_line, ZPL_FORM_MSG, 0, 0, "ODROID-NLP SERVER");
+    fputs  (cmd_line, fp);
+
+    memset (cmd_line, 0, sizeof(cmd_line));
+    sprintf(cmd_line, ZPL_FORM_MSG, 0, 32,
+                                NLP_MODEL ? "ZPL : ZD230D" : "ZPL : GC320D");
+    fputs  (cmd_line, fp);
+
+    fputs  (ZPL_FORM_END, fp);
+    fclose (fp);
+#endif
+
+    memset  (cmd_line, 0x00, sizeof(cmd_line));
+    sprintf (cmd_line, "%s", "lpr usblp_test.txt -P zebra 2<&1");
+
+    if ((fp = popen(cmd_line, "w")) != NULL) {
+        pclose(fp);
+    }
+    return 1;
+}
+
+//------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 int usblp_zpl_init (void)
 {
@@ -312,7 +362,7 @@ int usblp_zpl_init (void)
     fclose (fp);
 
     memset  (cmd_line, 0x00, sizeof(cmd_line));
-    sprintf (cmd_line, "%s", "lpr usblp_err.txt -P zebra 2<&1");
+    sprintf (cmd_line, "%s", "lpr usblp_init.txt -P zebra 2<&1");
 
     if ((fp = popen(cmd_line, "w")) != NULL) {
         pclose(fp);
@@ -372,6 +422,9 @@ int usblp_config (void)
 #if !defined (USE_PROTOCOL_EPL)
     usblp_zpl_init ();
 #endif
+
+    usblp_print_test ();
+
     return 1;
 }
 //------------------------------------------------------------------------------
