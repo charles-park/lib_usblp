@@ -266,11 +266,11 @@ int usblp_print_err (const char *msg1, const char *msg2, const char *msg3, int c
 #if defined (USE_PROTOCOL_EPL)
     fputs  (EPL_FORM_START, fp);
     memset (cmd_line, 0, sizeof(cmd_line));
-    sprintf(cmd_line, EPL_FORM_ERR_1, ch ? '>' : '<', NLP_MODEL ? 0:4, msg1);
+    sprintf(cmd_line, EPL_FORM_ERR_1, NLP_MODEL ? 0:4, ch ? '>' : '<', msg1);
     fputs  (cmd_line, fp);
-    sprintf(cmd_line, EPL_FORM_ERR_2, ch ? '>' : '<', NLP_MODEL ? 0:4, msg2);
+    sprintf(cmd_line, EPL_FORM_ERR_2, NLP_MODEL ? 0:4, ch ? '>' : '<', msg2);
     fputs  (cmd_line, fp);
-    sprintf(cmd_line, EPL_FORM_ERR_3, ch ? '>' : '<', NLP_MODEL ? 0:4, msg3);
+    sprintf(cmd_line, EPL_FORM_ERR_3, NLP_MODEL ? 0:4, ch ? '>' : '<', msg3);
     fputs  (cmd_line, fp);
     fputs  (EPL_FORM_END, fp);
     fclose (fp);
