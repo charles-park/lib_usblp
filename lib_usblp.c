@@ -119,6 +119,12 @@ static int check_usblp_connection (void)
 }
 
 //------------------------------------------------------------------------------
+int usblp_connection (void)
+{
+    return check_usblp_connection();
+}
+
+//------------------------------------------------------------------------------
 // get the usb label printer info.
 //------------------------------------------------------------------------------
 static int get_usblp_device (char *lpname)

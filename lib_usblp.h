@@ -16,6 +16,9 @@
 #define __LIB_USBLP_H__
 
 //------------------------------------------------------------------------------
+extern int  usblp_connection    (void);
+extern int  usblp_print_test    (void);
+
 extern int  usblp_print_err (const char *msg1, const char *msg2, const char *msg3, int ch);
 extern int  usblp_print_mac (char *msg, int ch);
 extern int  usblp_config    (void);
